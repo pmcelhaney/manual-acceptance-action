@@ -78,8 +78,9 @@ that event passes based on pre-queue PR validation, without retesting combined
 changes. Explain this limitation if the repo uses a merge queue.
 
 Keep the exact design and skip-manual-acceptance-tests exemption semantics
-unless I explicitly choose otherwise. Explain that removing all matching exemption labels restores normal
-enforcement, and that an exempt pass is not completed testing.
+unless I explicitly choose otherwise. Explain that removing all matching
+exemption labels restores normal enforcement, and that an exempt pass is not
+completed testing.
 Never add bypass labels, check human acceptance boxes, enable auto-merge, or
 weaken existing checks to get a green result.
 

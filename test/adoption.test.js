@@ -8,9 +8,12 @@ import { fileURLToPath } from 'node:url';
 import { evaluate } from '../src/checklist.js';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const readme = readFileSync(join(root, 'README.md'), 'utf8');
-const example = readFileSync(join(root, 'examples/manual-acceptance-tests.yml'), 'utf8');
-const skill = readFileSync(join(root, 'skills/manual-acceptance/SKILL.md'), 'utf8');
+// Windows Git checkouts can convert Markdown/YAML to CRLF. Compare their
+// content independently of checkout line-ending policy.
+const text = path => readFileSync(join(root, path), 'utf8').replaceAll('\r\n', '\n');
+const readme = text('README.md');
+const example = text('examples/manual-acceptance-tests.yml');
+const skill = text('skills/manual-acceptance/SKILL.md');
 
 test('documented workflow and setup prompt agree on published artifacts', () => {
   const workflow = [...readme.matchAll(/```yaml\n([\s\S]*?)```/g)][0][1];
