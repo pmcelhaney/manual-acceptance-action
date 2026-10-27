@@ -1,0 +1,17 @@
+name: Manual acceptance tests
+on:
+  pull_request_target:
+    types: [opened, edited, synchronize, reopened, labeled, unlabeled]
+  merge_group:
+    types: [checks_requested]
+permissions: {}
+concurrency:
+  group: manual-acceptance-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  manual-acceptance-tests:
+    name: Validate manual acceptance tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: pmcelhaney/manual-acceptance-action@7b624f1bc89238a5d7e762255cce95dc3daf8f5a
+        id: acceptance
