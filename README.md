@@ -108,4 +108,4 @@ npm run lint
 npm test
 ```
 
-Tests cover enforcement, exact exemptions/removal, checklist edits, section boundaries, source parser limitations, untrusted strings, outputs and consumer entrypoint execution. CI runs on Linux, Windows and macOS, plus an actual `uses: ./` metadata smoke test with synthetic event data. Synthetic checked items are integration fixtures, not human acceptance claims.
+Tests cover enforcement, exact exemptions/removal, checklist edits, section boundaries, source parser limitations, untrusted strings, outputs and consumer entrypoint execution. CI runs on Linux, Windows and macOS. A consumer smoke job verifies that native `uses: ./` invocation rejects unsupported CI events, then invokes the entrypoint with a synthetic PR event and checks its runner outputs. GitHub's reserved event variables cannot be replaced through step `env`, so the fixture invocation sets them in its child process. Synthetic checked items are integration fixtures, not human acceptance claims. Live fork/merge-queue event delivery requires adoption in a consumer repository; it is not exercised by this synthetic test.

@@ -35,11 +35,19 @@ jobs:
           const path = join(process.env.RUNNER_TEMP, 'acceptance-event.json');
           writeFileSync(path, JSON.stringify({pull_request: {body: '## Manual acceptance tests\n- [x] Synthetic integration fixture', head: {ref: 'copilot/smoke'}, labels: []}}));
           JS
-      - uses: ./
-        id: acceptance
+      - name: Native metadata rejects unsupported CI events
+        if: github.event_name != 'pull_request'
+        uses: ./
+        id: unsupported
+        continue-on-error: true
+      - name: Verify fail-closed native invocation
+        if: github.event_name != 'pull_request'
         env:
-          GITHUB_EVENT_NAME: pull_request
-          GITHUB_EVENT_PATH: ${{ runner.temp }}/acceptance-event.json
+          OUTCOME: ${{ steps.unsupported.outcome }}
+        run: test "$OUTCOME" = failure
+      - name: Consumer entrypoint with synthetic event
+        id: acceptance
+        run: GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$RUNNER_TEMP/acceptance-event.json" node src/main.js
       - name: Verify metadata wiring
         env:
           STATUS: ${{ steps.acceptance.outputs.status }}
