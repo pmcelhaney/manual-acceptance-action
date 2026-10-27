@@ -8,6 +8,6 @@
   "engines": { "node": ">=24" },
   "scripts": {
     "test": "node --test",
-    "lint": "node --check src/checklist.js && node --check src/main.js && node --check test/checklist.test.js && node --check test/consumer.test.js"
+    "lint": "node --check src/checklist.js && node --check src/main.js && node --check test/checklist.test.js && node --check test/consumer.test.js && node --check test/adoption.test.js"
   }
 }
