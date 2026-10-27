@@ -1,0 +1,33 @@
+name: Manual acceptance checklist
+author: Patrick McElhaney
+description: Require completed manual acceptance checklists for matching pull requests
+branding:
+  icon: check-square
+  color: purple
+inputs:
+  section-heading:
+    description: Level-two heading text (without the leading hashes)
+    default: Manual acceptance tests
+  branch-prefixes:
+    description: Newline-separated, case-sensitive branch prefixes that require a checklist; empty disables branch matching
+    default: copilot
+  skip-labels:
+    description: Newline-separated exact, case-sensitive exemption labels; empty disables exemptions
+    default: |
+      design
+      skip-manual-acceptance-tests
+  require-all:
+    description: Require a checklist on every pull request except explicitly exempt ones (true or false)
+    default: 'false'
+outputs:
+  enforced:
+    description: Whether checklist validation was required (true or false)
+  status:
+    description: complete, incomplete, exempt, out-of-scope, or merge-group
+  checked:
+    description: Number of checked items in the selected section
+  unchecked:
+    description: Number of unchecked items in the selected section
+runs:
+  using: node24
+  main: src/main.js

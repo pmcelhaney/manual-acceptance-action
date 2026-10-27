@@ -1,0 +1,48 @@
+name: CI
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - run: npm run lint
+      - run: npm test
+  consumer-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Simulate consumer event
+        run: |
+          node --input-type=module <<'JS'
+          import { writeFileSync } from 'node:fs';
+          import { join } from 'node:path';
+          const path = join(process.env.RUNNER_TEMP, 'acceptance-event.json');
+          writeFileSync(path, JSON.stringify({pull_request: {body: '## Manual acceptance tests\n- [x] Synthetic integration fixture', head: {ref: 'copilot/smoke'}, labels: []}}));
+          JS
+      - uses: ./
+        id: acceptance
+        env:
+          GITHUB_EVENT_NAME: pull_request
+          GITHUB_EVENT_PATH: ${{ runner.temp }}/acceptance-event.json
+      - name: Verify metadata wiring
+        env:
+          STATUS: ${{ steps.acceptance.outputs.status }}
+          ENFORCED: ${{ steps.acceptance.outputs.enforced }}
+          CHECKED: ${{ steps.acceptance.outputs.checked }}
+        run: test "$STATUS" = complete && test "$ENFORCED" = true && test "$CHECKED" = 1

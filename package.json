@@ -1,0 +1,13 @@
+{
+  "name": "manual-acceptance-action",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Validate human-owned pull-request acceptance checklists",
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=24" },
+  "scripts": {
+    "test": "node --test",
+    "lint": "node --check src/checklist.js && node --check src/main.js && node --check test/checklist.test.js && node --check test/consumer.test.js"
+  }
+}
