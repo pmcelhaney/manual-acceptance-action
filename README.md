@@ -26,11 +26,11 @@ jobs:
     name: Validate manual acceptance tests
     runs-on: ubuntu-latest
     steps:
-      - uses: pmcelhaney/manual-acceptance-action@main
+      - uses: pmcelhaney/manual-acceptance-action@08bdaba55cdac0b7738b2c1652d944e8404c55cf
         id: acceptance
 ```
 
-Replace `@main` with a reviewed full commit SHA before making the check required. There is no release tag yet. Keep this workflow on the default/base branch. No checkout, install, token, API request, or secret is needed. The Action is dependency-free JavaScript using GitHub's Node 24 runtime; self-hosted runners need Node 24 Action support (runner 2.327.1 or newer).
+The example pins the initial implementation commit. Review a new full commit SHA before upgrading. There is no release tag yet. Keep this workflow on the default/base branch. No checkout, install, token, API request, or secret is needed. The Action is dependency-free JavaScript using GitHub's Node 24 runtime; self-hosted runners need Node 24 Action support (runner 2.327.1 or newer).
 
 The metadata-only `pull_request_target` workflow supports forks and runs the trusted base workflow when a PR body or label changes. **Never add checkout of the PR head, execute PR code, interpolate PR text into a script, or restore PR-controlled caches in this job.** Keep `permissions: {}`. The Action itself only reads event JSON and writes fixed status values and counts. See GitHub's [pull_request_target security guidance](https://docs.github.com/en/actions/reference/security/securely-using-pull_request_target).
 
